@@ -17,16 +17,11 @@ const char *g_logTypeToName[] = {
   "PARSE"
 };
 
-/* setup debug log defaults */
-struct DebugLogTable g_debugLogTable[] = {
-    { TDEFAULT, LDEBUG },
-      { TPARSE, LDEBUG }
-};
-
-void flog(LogType type, LogLevel level, const char *fmt, ...) {
+void snflog(SNFConfig *conf, SNFLogType type, SNFLogLevel level,
+          const char *fmt, ...) {
   va_list args;
 
-  if (g_debugLogTable[type].level <= level) {
+  if (would_log(conf, type, level)) {
     /* example: WARNING.parsing: some error */
     puts(g_logLevelToName[level]);
     putchar('.');

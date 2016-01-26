@@ -20,37 +20,38 @@ NF9SourceTable *g_ipv6SourceTable = NULL;
  *   NF9_ENEEDMORE not enough data to parse a packet yet
  *   NF9_EWRONGVER wrong version. Terminate connection
  */
-ssize_t nf9PacketParse(const char *in, size_t len, struct sockaddr *sa) {
+ssize_t nf9PacketParse(SNFConfig *conf, const char *in, size_t len,
+    struct sockaddr *sa) {
   NF9Header *header;
   NF9Source *source;
   char ip_str[64];
 
   if (len < sizeof(NF9Header)) {
-    flog(TPARSE, LDEBUG, "v9 not enough bytes to parse packet");
+    snflog(conf, TPARSE, LDEBUG, "v9 not enough bytes to parse packet");
     return (NF9_ENEEDMORE);
   }
 
   header = (NF9Header *)in;
   if (header->version != 9) {
-    flog(TPARSE, LCRIT, "version mismatch");
+    snflog(conf, TPARSE, LCRIT, "version mismatch");
     return (NF9_EWRONGVER);
   }
 
-  source = nf9SourceLookup(sa);
+  source = nf9SourceLookup(conf, sa);
   if (!source) {
-    source = nf9AddSource(sa);
+    source = nf9AddSource(conf, sa);
     if (!source) {
       return (NF9_EUNKNOWN);
     }
   }
 
-  if (would_log(TPARSE, LDEBUG)) {
+  if (would_log(conf, TPARSE, LDEBUG)) {
     inet_ntop(sa->sa_family, sa, ip_str, sizeof(ip_str));
   }
-  flog(TPARSE, LDEBUG, "%s: bytes:%u version:%u count:%u uptime:%u unixtime:%u "
-       "sequence:%u source_id:%u",
-       ip_str, len, header->version, header->count, header->uptime,
-       header->unixtime, header->sequence, header->source_id);
+  snflog(conf, TPARSE, LDEBUG, "%s: bytes:%u version:%u count:%u uptime:%u "
+      "unixtime:%u sequence:%u source_id:%u",
+      ip_str, len, header->version, header->count, header->uptime,
+      header->unixtime, header->sequence, header->source_id);
 
   return (len);
 }
@@ -92,7 +93,7 @@ inline NF9Source *ipv6FindSource(struct sockaddr_in6 *ip,
 }
 
 // adds source to table, does not check for dupes
-NF9Source *nf9AddSource(struct sockaddr *sa) {
+NF9Source *nf9AddSource(SNFConfig *conf, struct sockaddr *sa) {
   NF9SourceTable *st;
 
   if (sa->sa_family == AF_INET) {
@@ -110,19 +111,20 @@ NF9Source *nf9AddSource(struct sockaddr *sa) {
     g_ipv6SourceTable = st;
     return (&st->source);
   } else {
-    flog(TPARSE, LCRIT, "can't add source, invalid addr in %s", __func__);
+    snflog(conf, TPARSE, LCRIT, "can't add source, invalid addr in %s",
+       	__func__);
     return (NULL);
   }
 }
 
 // traverse the source tables and find a a match or return NULL
-NF9Source *nf9SourceLookup(struct sockaddr *sa) {
+NF9Source *nf9SourceLookup(SNFConfig *conf, struct sockaddr *sa) {
   if (sa->sa_family == AF_INET) {
     return (ipv4FindSource((struct sockaddr_in *)sa, g_ipv4SourceTable));
   } else if (sa->sa_family == AF_INET6) {
     return (ipv6FindSource((struct sockaddr_in6 *)sa, g_ipv6SourceTable));
   } else {
-    flog(TPARSE, LCRIT, "can't lookup, invalid addr in %s", __func__);
+    snflog(conf, TPARSE, LCRIT, "can't lookup, invalid addr in %s", __func__);
     return (NULL);
   }
 }

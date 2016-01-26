@@ -4,11 +4,12 @@
 // Netflow v9 protocol definitions. Field type definitions were pulled from
 // the Cisco whitepaper on Netflow v9
 
+#include "snflow.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #ifdef HAVE_NETINET6_IN6_H
-  #include <netinet6/in6.h> // FreeBSD
+  #include <netinet6/in6.h> // FreeBSD IPv6 includes
 #endif
 #include <netinet/in.h>
 
@@ -294,9 +295,10 @@ extern NF9SourceTable *g_ipv6SourceTable;
 #define NF9_EUNKNOWN -1
 #define NF9_ENEEDMORE -2
 #define NF9_EWRONGVER -3
-extern ssize_t nf9PacketParse(const char *in, size_t len, struct sockaddr *sa);
+extern ssize_t nf9PacketParse(SNFConfig *conf, const char *in, size_t len,
+    struct sockaddr *sa);
 extern int nf9DataWrite(char *dst, size_t len, NF9Template *tp, NF9Data *flow);
 extern int nf9TemplateWrite(char *dst, size_t len, NF9Template *tp);
-extern NF9Source *nf9AddSource(struct sockaddr *sa);
-extern NF9Source *nf9SourceLookup(struct sockaddr *sa);
+extern NF9Source *nf9AddSource(SNFConfig *conf, struct sockaddr *sa);
+extern NF9Source *nf9SourceLookup(SNFConfig *conf, struct sockaddr *sa);
 #endif
