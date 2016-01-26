@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <stdlib.h>
 
 // XXX use jenkins hash here and make thread safe
 NF9SourceTable *g_ipv4SourceTable = NULL;
@@ -35,16 +36,16 @@ ssize_t nf9PacketParse(const char *in, size_t len, struct sockaddr *sa) {
     return (NF9_EWRONGVER);
   }
 
-  source = NF9SourceLookup(sa);
+  source = nf9SourceLookup(sa);
   if (!source) {
-    source = NF9AddSource(sa);
+    source = nf9AddSource(sa);
     if (!source) {
       return (NF9_EUNKNOWN);
     }
   }
 
   if (would_log(TPARSE, LDEBUG)) {
-    inet_ntop(sa->sa_family, sa, &ip_str, sizeof(ip_str));
+    inet_ntop(sa->sa_family, sa, ip_str, sizeof(ip_str));
   }
   flog(TPARSE, LDEBUG, "%s: bytes:%u version:%u count:%u uptime:%u unixtime:%u "
        "sequence:%u source_id:%u",

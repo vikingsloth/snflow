@@ -6,6 +6,7 @@
 
 
 #include <sys/types.h>
+#include <sys/socket.h>
 #ifdef HAVE_NETINET6_IN6_H
   #include <netinet6/in6.h> // FreeBSD
 #endif
@@ -293,7 +294,7 @@ extern NF9SourceTable *g_ipv6SourceTable;
 #define NF9_EUNKNOWN -1
 #define NF9_ENEEDMORE -2
 #define NF9_EWRONGVER -3
-extern ssize_t nf9PacketParse(const char *in, size_t len);
+extern ssize_t nf9PacketParse(const char *in, size_t len, struct sockaddr *sa);
 extern int nf9DataWrite(char *dst, size_t len, NF9Template *tp, NF9Data *flow);
 extern int nf9TemplateWrite(char *dst, size_t len, NF9Template *tp);
 extern NF9Source *nf9AddSource(struct sockaddr *sa);
