@@ -14,7 +14,9 @@ const char *g_logLevelToName[] = {
 
 const char *g_logTypeToName[] = {
   "NETFLOW",
-  "PARSE"
+  "PARSE",
+  "IO",
+  "CONF"
 };
 
 void snflog(SNFConfig *conf, SNFLogType type, SNFLogLevel level,

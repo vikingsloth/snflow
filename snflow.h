@@ -20,6 +20,8 @@ typedef enum _SNFLogLevel {
 typedef enum _SNFLogType {
   TDEFAULT = 0,
   TPARSE = 1,
+  TIO = 2,
+  TCONF = 3,
   TMAX
 } SNFLogType;
 #define SNF_MAX_LOG_TYPE TMAX
@@ -29,10 +31,18 @@ typedef struct _SNFSource {
   struct sockaddr_storage ss;
 } SNFSource;
 
+typedef struct _SNFListener {
+  struct _SNFListener *next;
+  struct sockaddr_storage ss;
+  char *ip_str;
+  uint16_t port; // host byte order
+  int sock;
+} SNFListener;
+
 #define SNF_MAX_LISTENERS 16
 typedef struct _SNFConfig {
-  // IP/port combos to bind to. Default is 0.0.0.0
-  struct sockaddr_storage listeners[SNF_MAX_LISTENERS];
+  // Linked list of netflow listener data: sockaddr, port, socket
+  SNFListener *listeners;
   size_t listener_count;
   uint8_t log_levels[SNF_MAX_LOG_TYPE];
   // Expected netflow sources. If allow_dynamic_sources is false, only these

@@ -1,6 +1,6 @@
 CC = @CC@
 CFLAGS = @CFLAGS@ -Wall -O3 -fPIC
-LDFLAGS = @LDFLAGS@
+LDFLAGS = @LDFLAGS@ -lev
 
 SNFLOW_SRCS = snflow.c debug_log.c netflow_v9.c
 SNFLOW_OBJS = $(SNFLOW_SRCS:.c=.o)
