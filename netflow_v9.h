@@ -1,9 +1,9 @@
 #ifndef __SNFLOW_NETFLOW_V9_H
 #define __SNFLOW_NETFLOW_V9_H
 
-/* Netflow v9 protocol definitions. Field type definitions were pulled from
- * the Cisco whitepaper on Netflow v9
- */
+// Netflow v9 protocol definitions. Field type definitions were pulled from
+// the Cisco whitepaper on Netflow v9
+
 
 #include <sys/types.h>
 #ifdef HAVE_NETINET6_IN6_H
@@ -63,7 +63,7 @@ typedef enum {
   TOTAL_BYTES_EXP = 40,
   TOTAL_PKTS_EXP = 41,
   TOTAL_FLOWS_EXP = 42,
-  /* vendor proprietary 43 */
+  // vendor proprietary 43
   IPV4_SRC_PREFIX = 44,
   IPV4_DST_PREFIX = 45,
   MPLS_TOP_LABEL_TYPE = 46,
@@ -71,7 +71,7 @@ typedef enum {
   FLOW_SAMPLER_ID = 48,
   FLOW_SAMPLER_MODE = 49,
   FLOW_SAMPLER_RANDOM_INTERVAL = 50,
-  /* vendor proprietary 51 */
+  // vendor proprietary 51
   MIN_TTL = 52,
   MAX_TTL = 53,
   IPV4_IDENT = 54,
@@ -85,11 +85,11 @@ typedef enum {
   IPV6_NEXT_HOP = 62,
   BGP_IPV6_NEXT_HOP = 63,
   IPV6_OPTION_HEADERS = 64,
-  /* vendor proprietary 65 */
-  /* vendor proprietary 66 */
-  /* vendor proprietary 67 */
-  /* vendor proprietary 68 */
-  /* vendor proprietary 69 */
+  // vendor proprietary 65
+  // vendor proprietary 66
+  // vendor proprietary 67
+  // vendor proprietary 68
+  // vendor proprietary 69
   MPLS_LABEL_1 = 70,
   MPLS_LABEL_2 = 71,
   MPLS_LABEL_3 = 72,
@@ -107,7 +107,7 @@ typedef enum {
   SAMPLER_NAME = 84,
   IN_PERMANENT_BYTES = 85,
   IN_PERMANENT_PKTS = 86,
-  /* vendor proprietary 87 */
+  // vendor proprietary 87
   FRAGMENT_OFFSET = 88,
   FORWARDING_STATUS = 89,
   MPLS_PAL_RD = 90,
@@ -125,105 +125,105 @@ typedef enum {
   layer2packetSectionData = 104
 } NF9FieldType;
 
-/* storage structure for template records */
+// storage structure for template records
 typedef struct _NF9Template {
-  uint16_t tid;       /* template id */
-  NF9FieldType *tmap; /* field type map using dynamic length array */
-  size_t tmap_len;    /* number of elements in the type map */
+  uint16_t tid;       // template id
+  NF9FieldType *tmap; // field type map using dynamic length array
+  size_t tmap_len;    // number of elements in the type map
 } NF9Template;
 
-/* storage structure for data records. Can be imported from or exported to
- * the network using a flow template */
+// storage structure for data records. Can be imported from or exported to
+// the network using a flow template
 typedef struct _NF9Data {
   // Incoming counter with length N x 8 bits for number of bytes associated with
   // an IP Flow.
-  size_t in_bytes;              // IN_BYTES
+  size_t in_bytes;                     // IN_BYTES
   // Incoming counter with length N x 8 bits for the number of packets
   // associated with an IP Flow
-  size_t in_pkts;               // IN_PKTS 
+  size_t in_pkts;                      // IN_PKTS 
   // Number of flows that were aggregated
-  size_t flows;                 // FLOWS
+  size_t flows;                        // FLOWS
   // IP protocol
-  u_char protocol;              // PROTOCOL
-  u_char src_tos;               // SRC_TOS
-  u_char tcp_flags;             // TCP_FLAGS
-  uint16_t l4_src_port;         // L4_SRC_PORT
-  struct in_addr ipv4_src_addr; // IPV4_SRC_ADDR
+  u_char protocol;                     // PROTOCOL
+  u_char src_tos;                      // SRC_TOS
+  u_char tcp_flags;                    // TCP_FLAGS
+  uint16_t l4_src_port;                // L4_SRC_PORT
+  struct in_addr ipv4_src_addr;        // IPV4_SRC_ADDR
   // The number of contiguous bits in the source address subnet mask i.e.: the
   // submask in slash notation
-  u_char src_mask;              // SRC_MASK
-  uint16_t input_snmp;          // INPUT_SNMP
-  uint16_t l4_dst_port;         // L4_DST_PORT
-  struct in_addr ipv4_dst_addr; // IPV4_DST_ADDR
+  u_char src_mask;                     // SRC_MASK
+  uint16_t input_snmp;                 // INPUT_SNMP
+  uint16_t l4_dst_port;                // L4_DST_PORT
+  struct in_addr ipv4_dst_addr;        // IPV4_DST_ADDR
   // The number of contiguous bits in the destination address subnet mask i.e.:
   // the submask in slash notation
-  u_char dst_mask;              // DST_MASK
-  uint16_t output_snmp;         // OUTPUT_SNMP
-  uint32_t ipv4_next_hop;       // IPV4_NEXT_HOP
+  u_char dst_mask;                     // DST_MASK
+  uint16_t output_snmp;                // OUTPUT_SNMP
+  uint32_t ipv4_next_hop;              // IPV4_NEXT_HOP
   // Source BGP autonomous system number. could be 2 or 4 bytes
-  uint32_t src_as;              // SRC_AS
+  uint32_t src_as;                     // SRC_AS
   // Destination BGP autonomous system number. could be 2 or 4 bytes
-  uint32_t dst_as;              // DST_AS
-  uint32_t bgp_ipv4_next_hop;   // BGP_IPV4_NEXT_HOP
+  uint32_t dst_as;                     // DST_AS
+  uint32_t bgp_ipv4_next_hop;          // BGP_IPV4_NEXT_HOP
   // IP multicast outgoing packet counter with length N x 8 bits for packets
   // associated with the IP Flow
-  uint32_t mul_dst_pkts;        // MUL_DST_PKTS
+  uint32_t mul_dst_pkts;               // MUL_DST_PKTS
   // IP multicast outgoing byte counter with length N x 8 bits for bytes
   // associated with the IP Flow
-  uint32_t mul_dst_bytes;       // MUL_DST_BYTES
+  uint32_t mul_dst_bytes;              // MUL_DST_BYTES
   // System uptime at which the last packet of this flow was switched
-  uint32_t last_switched;       // LAST_SWITCHED
+  uint32_t last_switched;              // LAST_SWITCHED
   // System uptime at which the first packet of this flow was switched
-  uint32_t first_switched;      // FIRST_SWITCHED
+  uint32_t first_switched;             // FIRST_SWITCHED
   // Outgoing counter with length N x 8 bits for the number of bytes associated
   // with an IP Flow
-  uint32_t out_bytes;           // OUT_BYTES
+  uint32_t out_bytes;                  // OUT_BYTES
   // Outgoing counter with length N x 8 bits for the number of packets
   // associated with an IP Flow.
-  uint32_t out_pkts;            // OUT_PKTS
+  uint32_t out_pkts;                   // OUT_PKTS
   // Minimum IP packet length on incoming packets of the flow
-  uint16_t min_pkt_lngth;       // MIN_PKT_LNGTH
+  uint16_t min_pkt_lngth;              // MIN_PKT_LNGTH
   // Maximum IP packet length on incoming packets of the flow
-  uint16_t max_pkt_lngth;       // MAX_PKT_LNGTH
-  struct in6_addr ipv6_src_addr; // IPV6_SRC_ADDR
-  struct in6_addr ipv6_dst_addr; // IPV6_DST_ADDR
+  uint16_t max_pkt_lngth;              // MAX_PKT_LNGTH
+  struct in6_addr ipv6_src_addr;        // IPV6_SRC_ADDR
+  struct in6_addr ipv6_dst_addr;        // IPV6_DST_ADDR
   // Length of the IPv6 source mask in contiguous bits
-  u_char ipv6_src_mask;          // IPV6_SRC_MASK
+  u_char ipv6_src_mask;                 // IPV6_SRC_MASK
   // Length of the IPv6 destination mask in contiguous bits
-  u_char ipv6_dst_mask;          // IPV6_DST_MASK
-  uint32_t ipv6_flow_label;      // IPV6_FLOW_LABEL
+  u_char ipv6_dst_mask;                 // IPV6_DST_MASK
+  uint32_t ipv6_flow_label;             // IPV6_FLOW_LABEL
   // Internet Control Message Protocol (ICMP) packet type; reported as ((ICMP
   // Type*256) + ICMP code)
-  uint16_t icmp_type;            // ICMP_TYPE
-  u_char mul_igmp_type;          // MUL_IGMP_TYPE
+  uint16_t icmp_type;                   // ICMP_TYPE
+  u_char mul_igmp_type;                 // MUL_IGMP_TYPE
   // When using sampled NetFlow, the rate at which packets are sampled i.e.: a
   // value of 100 indicates that one of every 100 packets is sampled
-  uint32_t sampling_interval;    // SAMPLING_INTERVAL
+  uint32_t sampling_interval;           // SAMPLING_INTERVAL
   // The type of algorithm used for sampled NetFlow: 0x01 Deterministic Sampling
   // ,0x02 Random Sampling
-  u_char sampling_algorithm;     // SAMPLING_ALGORITHM
+  u_char sampling_algorithm;            // SAMPLING_ALGORITHM
   // Timeout value (in seconds) for active flow entries in the NetFlow cache
-  uint16_t flow_active_timeout;  // FLOW_ACTIVE_TIMEOUT
+  uint16_t flow_active_timeout;         // FLOW_ACTIVE_TIMEOUT
   // Timeout value (in seconds) for inactive flow entries in the NetFlow cache
-  uint16_t flow_inactive_timeout; // FLOW_INACTIVE_TIMEOUT
+  uint16_t flow_inactive_timeout;        // FLOW_INACTIVE_TIMEOUT
   // Type of flow switching engine: RP = 0, VIP/Linecard = 1
-  u_char engine_type;             // ENGINE_TYPE
+  u_char engine_type;                    // ENGINE_TYPE
   // ID number of the flow switching engine
-  u_char engine_id;               // ENGINE_ID
+  u_char engine_id;                      // ENGINE_ID
   // Counter with length N x 8 bits for bytes for the number of bytes exported
   // by the Observation Domain
-  uint32_t total_bytes_exp;       // TOTAL_BYTES_EXP
+  uint32_t total_bytes_exp;              // TOTAL_BYTES_EXP
   // Counter with length N x 8 bits for bytes for the number of packets exported
   // by the Observation Domain
-  uint32_t total_pkts_exp;        // TOTAL_PKTS_EXP
+  uint32_t total_pkts_exp;               // TOTAL_PKTS_EXP
   // Counter with length N x 8 bits for bytes for the number of flows exported
   // by the Observation Domain
-  uint32_t total_flows_exp;       // TOTAL_FLOWS_EXP
+  uint32_t total_flows_exp;              // TOTAL_FLOWS_EXP
   // IPv4 source address prefix (specific for Catalyst architecture)
-  struct in_addr ipv4_src_prefix; // IPV4_SRC_PREFIX
+  struct in_addr ipv4_src_prefix;        // IPV4_SRC_PREFIX
   // IPv4 destination address prefix (specific for Catalyst architecture)
-  struct in_addr ipv4_dst_prefix; // IPV4_DST_PREFIX
-  uint32_t mpls_top_label_type;   // MPLS_TOP_LABEL_TYPE
+  struct in_addr ipv4_dst_prefix;        // IPV4_DST_PREFIX
+  uint32_t mpls_top_label_type;          // MPLS_TOP_LABEL_TYPE
   struct in_addr mpls_top_label_ip_addr; // MPLS_TOP_LABEL_IP_ADDR
   u_char flow_sampler_id;                // FLOW_SAMPLER_ID
   u_char flow_sampler_mode;              // FLOW_SAMPLER_MODE
@@ -289,7 +289,7 @@ typedef struct _NF9SourceTable {
 extern NF9SourceTable *g_ipv4SourceTable;
 extern NF9SourceTable *g_ipv6SourceTable;
 
-/* return values for nf9PacketParse */
+// return values for nf9PacketParse
 #define NF9_EUNKNOWN -1
 #define NF9_ENEEDMORE -2
 #define NF9_EWRONGVER -3
