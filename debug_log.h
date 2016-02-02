@@ -3,9 +3,9 @@
 
 typedef enum _LogLevel {
   LNONE = 0,
-  LCRITICAL = 1,
+  LCRIT = 1,
   LERROR = 2,
-  LWARNING = 3,
+  LWARN = 3,
   LINFO = 4,
   LDEBUG = 5
 } LogLevel;

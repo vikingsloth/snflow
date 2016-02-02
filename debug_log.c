@@ -13,8 +13,8 @@ const char *g_logLevelToName[] = {
 };
 
 const char *g_logTypeToName[] = {
-  "default",
-  "parsing"
+  "NETFLOW",
+  "PARSE"
 };
 
 /* setup debug log defaults */
@@ -35,5 +35,6 @@ void flog(LogType type, LogLevel level, const char *fmt, ...) {
     va_start(args, fmt);
     vprintf(fmt, args);
     va_end(args);
+    putchar('\n');
   }
 }

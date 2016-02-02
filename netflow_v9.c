@@ -11,12 +11,22 @@
  * Error return values:
  *   NF9_EUNKNOWN unknown error. Terminate connection
  *   NF9_ENEEDMORE not enough data to parse a packet yet
+ *   NF9_EWRONGVER wrong version. Terminate connection
  */
 ssize_t nf9PacketParse(const char *in, size_t len) {
+  NF9Header *header;
+
   if (len < sizeof(NF9Header)) {
-    flog(TPARSE, LDEBUG, "nf9PacketParse not enough bytes to parse packet");
+    flog(TPARSE, LDEBUG, "v9 not enough bytes to parse packet");
     return (NF9_ENEEDMORE);
   }
+
+  header = (NF9Header *)in;
+  if (header->version != 9) {
+    flog(TPARSE, LCRIT, "version mismatch");
+    return (NF9_EWRONGVER);
+  }
+
   return (len);
 }
 

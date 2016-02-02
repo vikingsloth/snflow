@@ -276,6 +276,7 @@ typedef struct _NF9Data {
 /* return values for nf9PacketParse */
 #define NF9_EUNKNOWN -1
 #define NF9_ENEEDMORE -2
+#define NF9_EWRONGVER -3
 extern ssize_t nf9PacketParse(const char *in, size_t len);
 extern int nf9DataWrite(char *dst, size_t len, NF9Template *tp, NF9Data *flow);
 extern int nf9TemplateWrite(char *dst, size_t len, NF9Template *tp);
