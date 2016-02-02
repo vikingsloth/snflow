@@ -6,7 +6,8 @@
  */
 
 #include <sys/types.h>
-#include <netinet6/in6.h>
+#include <netinet/in.h>
+// #include <netinet6/in6.h> XXX make configure check
 #include <netinet/in.h>
 
 typedef struct NF9Header {

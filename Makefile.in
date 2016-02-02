@@ -1,0 +1,22 @@
+CC = @CC@
+CFLAGS = @CFLAGS@ -Wall -O3
+LDFLAGS = @LDFLAGS@
+
+SNFLOW_SRCS = netflow_v9.c debug_log.c
+SNFLOW_OBJS = $(SNFLOW_SRCS:.c=.o)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $*.c
+
+test_snflow: $(SNFLOW_OBJS)
+	$(CC) $(LDFLAGS) $(SNFLOW_OBJS) -o $@
+
+all: test_snflow
+
+clean:
+	rm -f *.o test_snflow
+
+distclean: clean
+	rm -f Makefile config.status config.log
+
+default: all
