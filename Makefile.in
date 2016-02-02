@@ -14,6 +14,9 @@ libsnflow.so: $(SNFLOW_OBJS)
 test_snflow: libsnflow.so test_snflow.o
 	$(CC) -L. -lsnflow test_snflow.o -o $@ $(LDFLAGS)
 
+test:
+	LD_LIBRARY_PATH=. ./test_snflow
+
 all: libsnflow.so test_snflow
 
 clean:

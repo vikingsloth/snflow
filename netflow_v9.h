@@ -275,12 +275,19 @@ typedef struct _NF9Data {
 } NF9Data;
 
 typedef struct _NF9Source {
-  union src {
-    struct in_addr ip4;
-    struct in6_addr ip6;
-  };
-  NF9Template *tp_table;  // Array of templates allocated in chunks
+  struct sockaddr_storage ss;
+  NF9Template *tp_table; // Template ID lookup table
 } NF9Source;
+
+typedef struct _NF9SourceTable {
+  struct _NF9SourceTable *next;
+  NF9Source source;
+} NF9SourceTable;
+
+#define MAX_IPV4_SOURCES 128
+#define MAX_IPv6_SOURCE 128
+extern NF9SourceTable *g_ipv4SourceTable;
+extern NF9SourceTable *g_ipv6SourceTable;
 
 /* return values for nf9PacketParse */
 #define NF9_EUNKNOWN -1
@@ -289,4 +296,6 @@ typedef struct _NF9Source {
 extern ssize_t nf9PacketParse(const char *in, size_t len);
 extern int nf9DataWrite(char *dst, size_t len, NF9Template *tp, NF9Data *flow);
 extern int nf9TemplateWrite(char *dst, size_t len, NF9Template *tp);
+extern NF9Source *nf9AddSource(struct sockaddr *sa);
+extern NF9Source *nf9SourceLookup(struct sockaddr *sa);
 #endif
