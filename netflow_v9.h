@@ -274,6 +274,14 @@ typedef struct _NF9Data {
   u_char forwarding_status;              // FORWARDING_STATUS
 } NF9Data;
 
+typedef struct _NF9Source {
+  union src {
+    struct in_addr ip4;
+    struct in6_addr ip6;
+  };
+  NF9Template *tp_table;  // Array of templates allocated in chunks
+} NF9Source;
+
 /* return values for nf9PacketParse */
 #define NF9_EUNKNOWN -1
 #define NF9_ENEEDMORE -2
