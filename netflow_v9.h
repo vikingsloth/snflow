@@ -9,14 +9,14 @@
 #include <netinet6/in6.h>
 #include <netinet/in.h>
 
-struct NF9Header {
+typedef struct NF9Header {
   uint16_t version;
   uint16_t count;
   uint32_t uptime;
   uint32_t unixtime;
   uint32_t sequence;
   uint32_t source_id;
-};
+} NF9Header;
 
 typedef enum {
   IN_BYTES = 1,
@@ -124,15 +124,15 @@ typedef enum {
 } NF9FieldType;
 
 /* storage structure for template records */
-struct NF9Template {
+typedef struct _NF9Template {
   uint16_t tid;       /* template id */
   NF9FieldType *tmap; /* field type map using dynamic length array */
   size_t tmap_len;    /* number of elements in the type map */
-};
+} NF9Template;
 
 /* storage structure for data records. Can be imported from or exported to
  * the network using a flow template */
-struct NF9Data {
+typedef struct _NF9Data {
   // Incoming counter with length N x 8 bits for number of bytes associated with
   // an IP Flow.
   size_t in_bytes;              // IN_BYTES
@@ -270,10 +270,12 @@ struct NF9Data {
   // Forwarding status is encoded on 1 byte with the 2 left bits giving the
   // status and the 6 remaining bits giving the reason code.
   u_char forwarding_status;              // FORWARDING_STATUS
-};
+} NF9Data;
 
-extern int nf9FlowWrite(char *dst, size_t len, struct NF9Template *tp,
-                        struct NF9Data *flow);
-extern int nf9TemplateWrite(char *dst, size_t len,
-                            struct NF9Template *tp);
+/* return values for nf9PacketParse */
+#define NF9_EUNKNOWN -1
+#define NF9_ENEEDMORE -2
+extern ssize_t nf9PacketParse(const char *in, size_t len);
+extern int nf9DataWrite(char *dst, size_t len, NF9Template *tp, NF9Data *flow);
+extern int nf9TemplateWrite(char *dst, size_t len, NF9Template *tp);
 #endif
