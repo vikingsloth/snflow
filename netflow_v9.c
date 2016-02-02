@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 #include <string.h>
+#include <arpa/inet.h>
 
 // XXX use jenkins hash here and make thread safe
 NF9SourceTable *g_ipv4SourceTable = NULL;
@@ -18,8 +19,10 @@ NF9SourceTable *g_ipv6SourceTable = NULL;
  *   NF9_ENEEDMORE not enough data to parse a packet yet
  *   NF9_EWRONGVER wrong version. Terminate connection
  */
-ssize_t nf9PacketParse(const char *in, size_t len) {
+ssize_t nf9PacketParse(const char *in, size_t len, struct sockaddr *sa) {
   NF9Header *header;
+  NF9Source *source;
+  char ip_str[64];
 
   if (len < sizeof(NF9Header)) {
     flog(TPARSE, LDEBUG, "v9 not enough bytes to parse packet");
@@ -31,6 +34,22 @@ ssize_t nf9PacketParse(const char *in, size_t len) {
     flog(TPARSE, LCRIT, "version mismatch");
     return (NF9_EWRONGVER);
   }
+
+  source = NF9SourceLookup(sa);
+  if (!source) {
+    source = NF9AddSource(sa);
+    if (!source) {
+      return (NF9_EUNKNOWN);
+    }
+  }
+
+  if (would_log(TPARSE, LDEBUG)) {
+    inet_ntop(sa->sa_family, sa, &ip_str, sizeof(ip_str));
+  }
+  flog(TPARSE, LDEBUG, "%s: bytes:%u version:%u count:%u uptime:%u unixtime:%u "
+       "sequence:%u source_id:%u",
+       ip_str, len, header->version, header->count, header->uptime,
+       header->unixtime, header->sequence, header->source_id);
 
   return (len);
 }

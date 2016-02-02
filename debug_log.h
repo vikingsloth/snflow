@@ -1,6 +1,8 @@
 #ifndef __SNFLOW_DEBUG_LOG_H
 #define __SNFLOW_DEBUG_LOG_H
 
+#define would_log(type, level) (g_debugLogTable[type] <= level)
+
 typedef enum _LogLevel {
   LNONE = 0,
   LCRIT = 1,
