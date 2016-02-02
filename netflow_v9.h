@@ -6,8 +6,9 @@
  */
 
 #include <sys/types.h>
-#include <netinet/in.h>
-// #include <netinet6/in6.h> XXX make configure check
+#ifdef HAVE_NETINET6_IN6_H
+  #include <netinet6/in6.h> // FreeBSD
+#endif
 #include <netinet/in.h>
 
 typedef struct NF9Header {
