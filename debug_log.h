@@ -1,44 +1,30 @@
 #ifndef __SNFLOW_DEBUG_LOG_H
 #define __SNFLOW_DEBUG_LOG_H
 
-typedef enum {
-  L_NONE = 0,
-  L_CRITICAL = 1,
-  L_ERROR = 2,
-  L_WARNING = 3,
-  L_INFO = 4,
-  L_DEBUG = 5
+typedef enum _LogLevel {
+  LNONE = 0,
+  LCRITICAL = 1,
+  LERROR = 2,
+  LWARNING = 3,
+  LINFO = 4,
+  LDEBUG = 5
 } LogLevel;
 
-const char *g_logLevelToName[] = {
-  "NONE",
-  "CRITICAL",
-  "ERROR",
-  "WARNING",
-  "INFO",
-  "DEBUG"
-}
+extern const char *g_logLevelToName[];
 
-typedef enum {
-  T_DEFAULT = 0,
-  T_PARSE = 1
+typedef enum _LogType {
+  TDEFAULT = 0,
+  TPARSE = 1
 } LogType;
 
-const char *g_logTypeToName[] = {
-  "default",
-  "parsing"
-}
+extern const char *g_logTypeToName[];
 
 struct DebugLogTable {
   LogType type;
   LogLevel level;
 };
 
-/* setup debug log defaults */
-struct DebugLogTable g_debugLogTable[] = {
-  { T_DEFAULT, L_WARNING },
-  { T_PARSE, L_WARNING }
-};
+extern struct DebugLogTable g_debugLogTable[];
 
-extern void log(LogType type, LogLevel level, const char *fmt, ...);
+extern void flog(LogType type, LogLevel level, const char *fmt, ...);
 #endif

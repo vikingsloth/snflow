@@ -14,13 +14,16 @@
  */
 ssize_t nf9PacketParse(const char *in, size_t len) {
   if (len < sizeof(NF9Header)) {
-    log(T_PARSE, T_DEBUG, "nf9PacketParse not enough bytes to parse packet");
+    flog(TPARSE, LDEBUG, "nf9PacketParse not enough bytes to parse packet");
     return (NF9_ENEEDMORE);
   }
+  return (len);
 }
 
 int nf9DataWrite(char *dst, size_t len, NF9Template *tp, NF9Data *flow) {
+  return (-1);
 }
 
 int nf9TemplateWrite(char *dst, size_t len, NF9Template *tp) {
+  return (-1);
 }
